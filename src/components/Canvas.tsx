@@ -1,5 +1,6 @@
 import { MutableRefObject, useEffect } from "react";
 import { getPerlinNoise } from "../lib/perlinNoise";
+import { generatePerlinNoise } from "../lib/perlinNoiseV2";
 
 interface CanvasProps {
     canvasRef: MutableRefObject<HTMLCanvasElement | null>;
@@ -7,8 +8,7 @@ interface CanvasProps {
 
 export const Canvas = ({ canvasRef }: CanvasProps) => {
     const GRID_SIZE = 16;
-    const RESOLUTION = ;
-    const COLOR_SCALE = 250;
+    const RESOLUTION = 64;
     const CANVAS_WIDTH = 640;
     const pixel_size = CANVAS_WIDTH / RESOLUTION;
     const num_pixels = GRID_SIZE / RESOLUTION;
@@ -20,7 +20,8 @@ export const Canvas = ({ canvasRef }: CanvasProps) => {
             for (let y = 0; y < GRID_SIZE; y += num_pixels / GRID_SIZE) {
                 for (let x = 0; x < GRID_SIZE; x += num_pixels / GRID_SIZE) {
                     const v = getPerlinNoise(x, y);
-                    const alpha = Math.max(0, v * COLOR_SCALE);
+                    const alpha = Math.max(0, v);
+                    console.log(v, alpha)
                     //ctx.fillStyle = 'hsl(' + v + ',50%,50%)';
                     ctx.globalAlpha = alpha;
                     ctx.fillStyle = 'black';
