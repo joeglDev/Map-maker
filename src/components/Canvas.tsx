@@ -1,70 +1,44 @@
 import { MutableRefObject, useEffect } from "react";
+import { getPerlinNoise } from "../lib/perlinNoise";
+import { generatePerlinNoise } from "../lib/perlinNoiseV2";
 
 interface CanvasProps {
-    canvasRef: MutableRefObject<null>;
-    offScreenRef: MutableRefObject<null>;
+    canvasRef: MutableRefObject<HTMLCanvasElement | null>;
 }
 
-export const Canvas = ({ canvasRef, offScreenRef }: CanvasProps) => {
-    /*
-    const GRID_SIZE = 4;
-    const RESOLUTION = 128;
-    const COLOR_SCALE = 250;
+export const Canvas = ({ canvasRef }: CanvasProps) => {
+    const GRID_SIZE = 16;
+    const RESOLUTION = 64;
+    const CANVAS_WIDTH = 640;
     const pixel_size = CANVAS_WIDTH / RESOLUTION;
     const num_pixels = GRID_SIZE / RESOLUTION;
-    */
-    const CANVAS_WIDTH = 640;
-    const CANVAS_HEIGHT = 1280;
-
-
-
- 
 
     useEffect(() => {
-        const ctx = canvasRef.current.getContext('2d');
-        const offScreenCtx = offScreenRef.current.getContext('2d');
-        console.log('hi')
-        console.log(ctx, offScreenCtx)
-
-        const saved_alpha = ctx!.globalAlpha
-
-        // Fill the offscreen buffer with random noise. 
-        offScreenCtx!.width = CANVAS_WIDTH;
-        offScreenCtx!.height = CANVAS_HEIGHT;
-
-        const offscreen_id = offScreenCtx.getImageData(0, 0,
-            offScreenCtx!.width,
-            offScreenCtx!.height),
-            offscreen_pixels = offscreen_id.data
-
-        for (let i = 0; i < offscreen_pixels.length; i += 4) {
-            offscreen_pixels[i] =
-                offscreen_pixels[i + 1] =
-                offscreen_pixels[i + 2] = Math.floor(Math.random() * 255)
-            offscreen_pixels[i + 3] = 255
+        const current = canvasRef.current;
+        const ctx = current!.getContext('2d');
+        if (ctx !== null) {
+            for (let y = 0; y < GRID_SIZE; y += num_pixels / GRID_SIZE) {
+                for (let x = 0; x < GRID_SIZE; x += num_pixels / GRID_SIZE) {
+                    const v = getPerlinNoise(x, y);
+                    const alpha = Math.max(0, v);
+                    console.log(v, alpha)
+                    //ctx.fillStyle = 'hsl(' + v + ',50%,50%)';
+                    ctx.globalAlpha = alpha;
+                    ctx.fillStyle = 'black';
+                    ctx.fillRect(
+                        x / GRID_SIZE * CANVAS_WIDTH,
+                        y / GRID_SIZE * CANVAS_WIDTH,
+                        pixel_size,
+                        pixel_size
+                    );
+                }
+                ctx.globalAlpha = 1;
+            }
         }
-
-        offScreenCtx!.putImageData(offscreen_id, 0, 0)
-
-        // Scale random iterations onto the canvas to generate Perlin noise. 
-        for (let size = 4; size <= offScreenCtx!.width; size *= 2) {
-            const x = Math.floor(Math.random() * (offScreenCtx!.width - size)),
-                y = Math.floor(Math.random() * (offScreenCtx!.height - size))
-
-            ctx!.globalAlpha = 4 / size
-            ctx!.drawImage(offScreenRef.current, x, y, size, size,
-                0, 0, CANVAS_WIDTH, CANVAS_HEIGHT)
-        }
-
-        ctx!.globalAlpha = saved_alpha
-
-    }, [canvasRef, offScreenRef]);
+    }, [canvasRef, num_pixels, pixel_size]);
 
 
     return (
-        <>
-            <canvas style={{ width: '80rem', height: '40rem' }} ref={canvasRef} />
-            <canvas style={{ width: '80rem', height: '40rem', display: 'none' }} ref={offScreenRef} />
-        </>
+        <canvas style={{ width: '80rem', height: '40rem' }} ref={canvasRef} />
     )
 };
