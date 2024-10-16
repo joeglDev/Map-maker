@@ -1,3 +1,4 @@
+/*
 interface Vector2D {
     x: number;
     y: number;
@@ -50,3 +51,4 @@ export const getPerlinNoise = (x: number, y: number) => {
 
 
 
+*/
