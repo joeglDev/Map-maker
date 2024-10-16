@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { Canvas } from "./Canvas";
 
 export const MapAndControls = () => {
-    const canvasRef = useRef(null)
+    const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
     return (
         <>
