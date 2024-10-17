@@ -1,6 +1,5 @@
 import { MutableRefObject, useEffect } from "react";
 import { getPerlinNoise } from "../lib/perlinNoise";
-import { generatePerlinNoise } from "../lib/perlinNoiseV2";
 
 interface CanvasProps {
     canvasRef: MutableRefObject<HTMLCanvasElement | null>;
@@ -12,6 +11,7 @@ export const Canvas = ({ canvasRef }: CanvasProps) => {
     const CANVAS_WIDTH = 640;
     const pixel_size = CANVAS_WIDTH / RESOLUTION;
     const num_pixels = GRID_SIZE / RESOLUTION;
+    const SEED = Math.floor(Math.random() * 90000) + 10000;
 
     useEffect(() => {
         const current = canvasRef.current;
@@ -19,11 +19,12 @@ export const Canvas = ({ canvasRef }: CanvasProps) => {
         if (ctx !== null) {
             for (let y = 0; y < GRID_SIZE; y += num_pixels / GRID_SIZE) {
                 for (let x = 0; x < GRID_SIZE; x += num_pixels / GRID_SIZE) {
-                    const v = getPerlinNoise(x, y);
-                    const alpha = Math.max(0, v);
-                    console.log(v, alpha)
+                    const v = getPerlinNoise(x, y, SEED);
                     //ctx.fillStyle = 'hsl(' + v + ',50%,50%)';
-                    ctx.globalAlpha = alpha;
+                    ctx.globalAlpha = Math.max(0, v);
+                    /*
+                    add colour value here based on value of v e.g 0 = blue, 0.1 = green
+                    */
                     ctx.fillStyle = 'black';
                     ctx.fillRect(
                         x / GRID_SIZE * CANVAS_WIDTH,
@@ -35,7 +36,7 @@ export const Canvas = ({ canvasRef }: CanvasProps) => {
                 ctx.globalAlpha = 1;
             }
         }
-    }, [canvasRef, num_pixels, pixel_size]);
+    }, [canvasRef, num_pixels, pixel_size, SEED]);
 
 
     return (
