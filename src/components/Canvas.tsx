@@ -11,8 +11,7 @@ export const Canvas = ({ canvasRef, seed }: CanvasProps) => {
     const num_pixels = GRID_SIZE / RESOLUTION;
 
     useEffect(() => {
-        const current = canvasRef.current;
-        const ctx = current!.getContext('2d');
+        const ctx = canvasRef.current!.getContext('2d');
 
         if (ctx !== null) {
             clearCanvas(ctx)
@@ -21,8 +20,6 @@ export const Canvas = ({ canvasRef, seed }: CanvasProps) => {
                 for (let x = 0; x < GRID_SIZE; x += num_pixels / GRID_SIZE) {
                     drawPoint(x, y, ctx, seed)
                 }
-
-                ctx.globalAlpha = 1;
             }
         }
     }, [canvasRef, num_pixels, seed]);

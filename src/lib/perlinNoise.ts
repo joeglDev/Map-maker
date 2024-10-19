@@ -77,7 +77,7 @@ export const getPerlinNoise = (x: number, y: number, seed: number): number => {
     n1 = dotGridGradient(x1, y1, x, y, seed);
     const ix1 = interpolate(n0, n1, sx);
 
-    return interpolate(ix0, ix1, sy); // returns values in range -1 and 1
+    return interpolate(ix0, ix1, sy) * 10; // returns values in range 0 and 3 ...???
 }
 
 
