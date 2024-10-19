@@ -1,14 +1,15 @@
 import { MutableRefObject, useEffect } from "react";
 import { clearCanvas, drawPoint } from "../lib/canvasFunctions";
-import { GRID_SIZE, RESOLUTION } from "../constants/canvas.constants";
 
 interface CanvasProps {
+    gridSize: number;
     canvasRef: MutableRefObject<HTMLCanvasElement | null>;
+    resolution: number;
     seed: number;
 }
 
-export const Canvas = ({ canvasRef, seed }: CanvasProps) => {
-    const num_pixels = GRID_SIZE / RESOLUTION;
+export const Canvas = ({ canvasRef, seed, gridSize, resolution }: CanvasProps) => {
+    const num_pixels = gridSize / resolution;
 
     useEffect(() => {
         const ctx = canvasRef.current!.getContext('2d');
@@ -16,16 +17,16 @@ export const Canvas = ({ canvasRef, seed }: CanvasProps) => {
         if (ctx !== null) {
             clearCanvas(ctx)
 
-            for (let y = 0; y < GRID_SIZE; y += num_pixels / GRID_SIZE) {
-                for (let x = 0; x < GRID_SIZE; x += num_pixels / GRID_SIZE) {
-                    drawPoint(x, y, ctx, seed)
+            for (let y = 0; y < gridSize; y += num_pixels / gridSize) {
+                for (let x = 0; x < gridSize; x += num_pixels / gridSize) {
+                    drawPoint(x, y, ctx, seed, gridSize, resolution)
                 }
             }
         }
-    }, [canvasRef, num_pixels, seed]);
+    }, [canvasRef, num_pixels, seed, gridSize, resolution]);
 
 
     return (
-        <canvas style={{ width: '80rem', height: '40rem' }} ref={canvasRef} />
+        <canvas style={{ width: '80rem', height: '40rem', margin: '5rem' }} ref={canvasRef} />
     )
 };
