@@ -17,7 +17,7 @@ const getFillStyle = (v: number): string => {
 };
 
 export const drawPoint = (x: number, y: number, ctx: CanvasRenderingContext2D, seed: number) => {
-    const v = Math.max(0, getPerlinNoise(x, y, seed));
+    const v =  getPerlinNoise(x, y, seed);
     ctx.fillStyle = getFillStyle(v);
     ctx.fillRect(
         x / GRID_SIZE * CANVAS_WIDTH,

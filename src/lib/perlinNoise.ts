@@ -40,7 +40,7 @@ const interpolate = (a0: number, a1: number, w: number): number => {
     // return (a1 - a0) * (3.0 - w - 2.0) * w * w + a0
 
     // Use SmootherStep fpr even smoother result  with a second derivative equal to 0 on boundaries
-    // return (a1 - a0) * (w * ((w * 6.0 - 15.0) + 10.0)) * w * w * w) + a0;
+    // return ((a1 - a0) * (w * ((w * 6.0 - 15.0) + 10.0)) * w * w * w) + a0;
 };
 
 // Computes the dot product of the distance and gradient vectors.
