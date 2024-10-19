@@ -4,11 +4,12 @@ import { clearCanvas, drawPoint } from "../lib/canvasFunctions";
 interface CanvasProps {
     gridSize: number;
     canvasRef: MutableRefObject<HTMLCanvasElement | null>;
+    oceanHeight: number;
     resolution: number;
     seed: number;
 }
 
-export const Canvas = ({ canvasRef, seed, gridSize, resolution }: CanvasProps) => {
+export const Canvas = ({ canvasRef, seed, gridSize, oceanHeight, resolution }: CanvasProps) => {
     const num_pixels = gridSize / resolution;
 
     useEffect(() => {
@@ -19,11 +20,11 @@ export const Canvas = ({ canvasRef, seed, gridSize, resolution }: CanvasProps) =
 
             for (let y = 0; y < gridSize; y += num_pixels / gridSize) {
                 for (let x = 0; x < gridSize; x += num_pixels / gridSize) {
-                    drawPoint(x, y, ctx, seed, gridSize, resolution)
+                    drawPoint(x, y, ctx, seed, gridSize, resolution, oceanHeight)
                 }
             }
         }
-    }, [canvasRef, num_pixels, seed, gridSize, resolution]);
+    }, [canvasRef, num_pixels, seed, gridSize, resolution, oceanHeight]);
 
 
     return (
